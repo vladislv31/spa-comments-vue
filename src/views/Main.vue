@@ -1,15 +1,17 @@
 <template>
     <div>
         <h1> Welcome</h1>
-        <router-link v-if="!isLoggedIn" to="/login"><button>Login</button></router-link>
+        <router-link v-if="!isLoggedIn()" to="/login"><button>Login</button></router-link>
     </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import store from '../store'
 export default {
-  computed: {
-    ...mapGetters(['isLoggedIn'])
+  methods: {
+    isLoggedIn () {
+      return store.getters.isLoggedIn
+    }
   }
 }
 </script>

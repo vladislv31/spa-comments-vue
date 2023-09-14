@@ -13,7 +13,7 @@
   </div>
 </template>
 <script>
-import { mapMutations } from 'vuex'
+import store from '../store'
 export default {
   data: () => {
     return {
@@ -22,23 +22,24 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setUser', 'setToken']),
     async login (e) {
-      // e.preventDefault()
-      // const response = await fetch('http://localhost:3000/auth/login', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({
-      //     username: this.username,
-      //     password: this.password
-      //   })
-      // })
-      // const { username, access_token: accessToken } = await response.json()
+      e.preventDefault()
+      const response = await fetch('http://localhost:3000/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: this.username,
+          password: this.password
+        })
+      })
+      const { username, access_token: accessToken } = await response.json()
       // this.setUser(username)
       // this.setToken(accessToken)
-      // this.$router.push('/')
+      store.commit('setUser', username)
+      store.commit('setToken', accessToken)
+      this.$router.push('/')
     }
   }
 }
