@@ -5,17 +5,8 @@
       <p class="mb-3">{{ comment.body }}</p>
       <div>
         <b-button size="sm" variant="primary" @click="showReplyForm = !showReplyForm">Ответить</b-button>
-        <!-- Форма для ответа на комментарий (опционально) -->
         <div v-if="showReplyForm">
-          <b-form-textarea
-            id="textarea"
-            v-model="replyBody"
-            placeholder="Enter something..."
-            rows="3"
-            max-rows="6"
-            class="mt-4 mb-4"
-          ></b-form-textarea>
-          <b-button size="sm" @click="replyToComment" variant="outline-success">Отправить</b-button>
+          <AddComment :parent-id="comment.id" @newComment="processAddComment"/>
         </div>
       </div>
       <div v-if="comment.children">
@@ -24,6 +15,7 @@
           :key="childComment.id"
           :comment="childComment"
           :depth="depth + 1"
+          @newComment="processAddComment"
         />
       </div>
     </b-card>
@@ -31,8 +23,12 @@
 </template>
 
 <script>
+import AddComment from '../components/AddComment.vue'
 export default {
   name: 'Comment',
+  components: {
+    AddComment
+  },
   props: {
     comment: {
       type: Object,
@@ -45,13 +41,13 @@ export default {
   },
   data () {
     return {
-      showReplyForm: false,
-      replyBody: ''
+      showReplyForm: false
     }
   },
   methods: {
-    replyToComment () {
-      // Здесь код для отправки ответа на комментарий
+    processAddComment () {
+      this.showReplyForm = false
+      this.$emit('newComment')
     }
   }
 }
