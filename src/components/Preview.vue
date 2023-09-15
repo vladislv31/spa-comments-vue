@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-card :class="{ 'ml-4': depth > 0 }" class="mb-2 mt-4">
+    <b-card class="mb-2 mt-4">
       <strong class="mb-2">{{ comment.author.username }}</strong>
       <p class="mb-2" v-html="comment.body"></p>
       <div v-if="comment.extraDetails.fileUrl" class="mb-3">
@@ -16,21 +16,6 @@
             </div>
           </div>
         </div>
-      </div>
-      <div>
-        <b-button size="sm" variant="primary" @click="showReplyForm = !showReplyForm">Ответить</b-button>
-        <div v-if="showReplyForm">
-          <AddComment :parent-id="comment.id" @newComment="processAddComment"/>
-        </div>
-      </div>
-      <div v-if="comment.children">
-        <Comment
-          v-for="childComment in comment.children"
-          :key="childComment.id"
-          :comment="childComment"
-          :depth="depth + 1"
-          @newComment="processAddComment"
-        />
       </div>
     </b-card>
   </div>
@@ -71,39 +56,12 @@
 </style>
 
 <script>
-import AddComment from '../components/AddComment.vue'
 export default {
-  name: 'Comment',
-  components: {
-    AddComment
-  },
+  name: 'Preview',
   props: {
     comment: {
       type: Object,
       required: true
-    },
-    depth: {
-      type: Number,
-      default: 0
-    }
-  },
-  data () {
-    return {
-      showReplyForm: false,
-      previewText: '',
-      showModal: false
-    }
-  },
-  async created () {
-    if (['text/plain'].includes(this.comment.extraDetails.fileType)) {
-      const response = await fetch(`http://localhost:3000/comments/${this.comment.extraDetails.fileUrl}`)
-      this.previewText = await response.text()
-    }
-  },
-  methods: {
-    processAddComment () {
-      this.showReplyForm = false
-      this.$emit('newComment')
     }
   }
 }
