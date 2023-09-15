@@ -8,7 +8,7 @@
         <div v-if="showModal" @click="showModal = false" class="previewModal">
           <div class="previewModal-content" @click.stop>
             <span class="close" @click="showModal = false">&times;</span>
-            <div v-if="['image/png', 'image/jpg', 'image/gif'].includes(comment.extraDetails.fileType)">
+            <div v-if="['image/png', 'image/jpg', 'image/jpeg', 'image/gif'].includes(comment.extraDetails.fileType)">
               <img :src="`http://localhost:3000/comments/${comment.extraDetails.fileUrl}`" alt="Image preview">
             </div>
             <div v-if="['text/plain'].includes(comment.extraDetails.fileType)">
