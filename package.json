@@ -16,6 +16,7 @@
     "bootstrap-vue": "^2.23.1",
     "vue": "^2.5.2",
     "vue-cookies": "^1.8.3",
+    "vue-lightbox2": "0.0.2-b1",
     "vue-router": "^3.0.1",
     "vuex": "^4.1.0",
     "vuex-persistedstate": "^4.1.0"

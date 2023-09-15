@@ -48,7 +48,7 @@ export default {
       comments: [],
       isLoading: false,
       page: 1,
-      perPage: 1,
+      perPage: 2,
       sortBy: undefined,
       sortOrder: 'desc',
       loaderGif
