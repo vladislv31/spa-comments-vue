@@ -2,6 +2,7 @@
   <div>
     <b-card :class="{ 'ml-4': depth > 0 }" class="mb-2 mt-4">
       <strong class="mb-2">{{ comment.author.username }}</strong>
+      <div class="mb-2"><small>{{ formatDate(comment.createdAt) }}</small></div>
       <p class="mb-2" v-html="comment.body"></p>
       <div v-if="comment.extraDetails.fileUrl" class="mb-3">
         <p>Attach: <a @click="showModal = true" class="preview-button">{{ comment.extraDetails.fileName }}</a></p>
@@ -51,6 +52,7 @@
     position: absolute;
     right: 15px;
     top: 10px;
+    cursor: pointer;
   }
 
   .previewModal-content {
@@ -61,6 +63,16 @@
     background: white;
     z-index: 10000;
     padding: 25px;
+    padding-top: 40px;
+    min-width: 300px;
+    max-width: 600px;
+    max-height: 700px;
+    overflow-y: auto;
+  }
+
+  .previewModal-content pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
   }
 
   .preview-button {
@@ -72,6 +84,7 @@
 
 <script>
 import AddComment from '../components/AddComment.vue'
+import moment from 'moment'
 export default {
   name: 'Comment',
   components: {
@@ -104,6 +117,9 @@ export default {
     processAddComment () {
       this.showReplyForm = false
       this.$emit('newComment')
+    },
+    formatDate (date) {
+      return moment(date).format('YYYY-MM-DD in HH:mm')
     }
   }
 }

@@ -2,6 +2,7 @@
   <div>
     <b-card class="mb-2 mt-4">
       <strong class="mb-2">{{ comment.author.username }}</strong>
+      <div class="mb-2"><small>{{ formatDate(comment.createdAt) }}</small></div>
       <p class="mb-2" v-html="comment.body"></p>
       <div v-if="comment.extraDetails.fileUrl" class="mb-3">
         <p>Attach: <a @click="showModal = true" class="preview-button">{{ comment.extraDetails.fileName }}</a></p>
@@ -56,12 +57,18 @@
 </style>
 
 <script>
+import moment from 'moment'
 export default {
   name: 'Preview',
   props: {
     comment: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    formatDate (date) {
+      return moment(date).format('YYYY-MM-DD in HH:mm')
     }
   }
 }
