@@ -1,7 +1,7 @@
 import router from '../router'
 
-export const makeRequest = async (url, method, headers, body) => {
-  const response = await fetch(url, {
+export const makeRequest = async (uri, method, headers, body) => {
+  const response = await fetch(`http://localhost:80${uri}`, {
     method,
     headers,
     body
@@ -11,7 +11,11 @@ export const makeRequest = async (url, method, headers, body) => {
     if (response.status === 400) {
       throw new Error((await response.json()).message[0])
     } else if (response.status === 401) {
-      router.push('/login')
+      if (router.currentRoute.path !== '/login') {
+        router.push('/login')
+      } else {
+        throw new Error((await response.json()).message)
+      }
     } else if (response.status === 409) {
       throw new Error((await response.json()).message)
     }

@@ -86,7 +86,7 @@ export default {
 
       try {
         const response = await makeRequest(
-          'http://localhost:3000/comments/getAll?' + new URLSearchParams({
+          '/comments/getAll?' + new URLSearchParams({
             page: this.page,
             perPage: this.perPage,
             sortBy: this.sortBy || 'createdAt',
@@ -128,7 +128,7 @@ export default {
     }
   },
   mounted () {
-    this.socket = io('http://localhost:3000', {
+    this.socket = io('http://localhost:80', {
       query: {
         username: store.getters.getUser
       }

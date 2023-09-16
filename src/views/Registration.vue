@@ -92,7 +92,7 @@ export default {
           return
         }
         await makeRequest(
-          'http://localhost:3000/users/signup',
+          '/users/signup',
           'POST',
           {
             'Content-Type': 'application/json'

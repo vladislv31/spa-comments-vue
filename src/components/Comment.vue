@@ -10,7 +10,7 @@
           <div class="previewModal-content" @click.stop>
             <span class="close" @click="showModal = false">&times;</span>
             <div v-if="['image/png', 'image/jpg', 'image/jpeg', 'image/gif'].includes(comment.extraDetails.fileType)">
-              <img :src="`http://localhost:3000/comments/${comment.extraDetails.fileUrl}`" alt="Image preview">
+              <img :src="`http://localhost:80/comments/${comment.extraDetails.fileUrl}`" alt="Image preview">
             </div>
             <div v-if="['text/plain'].includes(comment.extraDetails.fileType)">
               <pre>{{ previewText }}</pre>
@@ -84,6 +84,7 @@
 
 <script>
 import AddComment from '../components/AddComment.vue'
+import { makeRequest } from '../utils/makeRequest.ts'
 import moment from 'moment'
 export default {
   name: 'Comment',
@@ -109,7 +110,7 @@ export default {
   },
   async created () {
     if (['text/plain'].includes(this.comment.extraDetails.fileType)) {
-      const response = await fetch(`http://localhost:3000/comments/${this.comment.extraDetails.fileUrl}`)
+      const response = await makeRequest(`/comments/${this.comment.extraDetails.fileUrl}`)
       this.previewText = await response.text()
     }
   },

@@ -14,6 +14,9 @@
           <div class="input-error" v-if="v$.password.$errors.length">{{ v$.password.$errors[0].$message }}</div>
         </div>
         <br>
+        <div v-if="error" class="error">
+          <p>{{ error }}</p>
+        </div>
         <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
         <br><br><router-link to="/register" class="mb-4">Registration</router-link>
       </form>
@@ -24,6 +27,7 @@
 import store from '../store'
 import { required } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
+import { makeRequest } from '../utils/makeRequest.ts'
 export default {
   setup () {
     return { v$: useVuelidate() }
@@ -31,7 +35,8 @@ export default {
   data: () => {
     return {
       username: '',
-      password: ''
+      password: '',
+      error: null
     }
   },
   validations () {
@@ -42,24 +47,29 @@ export default {
   },
   methods: {
     async login (e) {
+      this.error = null
       this.v$.$touch()
       if (this.v$.$invalid) {
         return
       }
-      const response = await fetch('http://localhost:3000/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          username: this.username,
-          password: this.password
-        })
-      })
-      const { username, access_token: accessToken } = await response.json()
-      store.commit('setUser', username)
-      store.commit('setToken', accessToken)
-      this.$router.push('/')
+      try {
+        const response = await makeRequest(
+          '/auth/login',
+          'POST',
+          {
+            'Content-Type': 'application/json'
+          },
+          JSON.stringify({
+            username: this.username,
+            password: this.password
+          }))
+        const { username, access_token: accessToken } = await response.json()
+        store.commit('setUser', username)
+        store.commit('setToken', accessToken)
+        this.$router.push('/')
+      } catch (error) {
+        this.error = error
+      }
     }
   }
 }
@@ -89,6 +99,10 @@ export default {
 
   .input-error {
     margin-bottom: 10px;
+    color: #ca2525;
+  }
+
+  .error {
     color: #ca2525;
   }
 </style>

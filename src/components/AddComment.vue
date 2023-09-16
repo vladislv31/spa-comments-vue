@@ -76,7 +76,7 @@ export default {
         formData.append('file', this.selectedFile)
 
         await makeRequest(
-          'http://localhost:3000/comments/create',
+          '/comments/create',
           'POST',
           {
             'Authorization': 'Bearer ' + store.getters.getToken
