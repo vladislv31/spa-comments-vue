@@ -1,5 +1,6 @@
 <template>
   <b-container>
+    <Notification ref="notification" :message="notificationMessage" />
     <b-button variant="outline-primary" class="mb-5" @click="logout">Logout</b-button>
     <h2>Add comment</h2>
     <AddComment @newComment="fetchComments" class="mb-5"/>
@@ -39,14 +40,17 @@
 
 <script>
 import Comment from '../components/Comment.vue'
+import Notification from '../components/Notification.vue'
 import AddComment from '../components/AddComment.vue'
 import store from '../store'
 import loaderGif from '@/assets/loader.gif'
 import { makeRequest } from '../utils/makeRequest.ts'
+import { io } from 'socket.io-client'
 export default {
   components: {
     Comment,
-    AddComment
+    AddComment,
+    Notification
   },
   data () {
     return {
@@ -57,6 +61,7 @@ export default {
       perPage: 5,
       sortBy: undefined,
       sortOrder: 'desc',
+      notificationMessage: '',
       loaderGif
     }
   },
@@ -120,6 +125,23 @@ export default {
       store.commit('setUser', '')
       store.commit('setToken', '')
       this.$router.push('/login')
+    }
+  },
+  mounted () {
+    this.socket = io('http://localhost:3000', {
+      query: {
+        username: store.getters.getUser
+      }
+    })
+
+    this.socket.on('notification', (message) => {
+      this.notificationMessage = message
+      this.$refs.notification.show()
+    })
+  },
+  beforeDestroy () {
+    if (this.socket) {
+      this.socket.disconnect()
     }
   }
 }

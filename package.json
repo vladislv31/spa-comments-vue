@@ -16,6 +16,7 @@
     "axios": "^1.5.0",
     "bootstrap": "^5.3.2",
     "bootstrap-vue": "^2.23.1",
+    "socket.io-client": "^4.7.2",
     "vue": "^2.5.2",
     "vue-cookies": "^1.8.3",
     "vue-lightbox2": "0.0.2-b1",
