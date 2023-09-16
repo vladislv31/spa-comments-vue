@@ -8,9 +8,14 @@
       <img :src="loaderGif" class="loader-img" alt="Loading..." />
     </div>
     <div v-else>
-      <button @click="updateSort('username')">Sort by Username</button>
-      <button @click="updateSort('email')">Sort by Email</button>
-      <button @click="updateSort('createdAt')">Sort by Created At</button>
+      <div v-if="comments.length">
+        <button @click="updateSort('username')">Sort by Username</button>
+        <button @click="updateSort('email')">Sort by Email</button>
+        <button @click="updateSort('createdAt')">Sort by Created At</button>
+      </div>
+      <div v-else>
+        No comments...
+      </div>
       <Comment
         v-for="comment in comments"
         :key="comment.id"

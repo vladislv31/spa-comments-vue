@@ -17,7 +17,7 @@
       <p>{{ error }}</p>
     </div>
     <input type="file" @change="handleFileUpload"/>
-    <b-button size="sm" @click="replyToComment" variant="outline-success">Отправить</b-button>
+    <b-button size="sm" @click="replyToComment" variant="outline-success">Send</b-button>
     <div class="mt-3 d-flex">
       <label style="margin-right: 8px;">Show preview</label>
       <input type="checkbox" v-model="showPreview">

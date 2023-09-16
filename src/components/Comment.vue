@@ -18,7 +18,7 @@
         </div>
       </div>
       <div>
-        <b-button size="sm" variant="primary" @click="showReplyForm = !showReplyForm">Ответить</b-button>
+        <b-button size="sm" variant="primary" @click="showReplyForm = !showReplyForm">Reply</b-button>
         <div v-if="showReplyForm">
           <AddComment :parent-id="comment.id" @newComment="processAddComment"/>
         </div>
