@@ -38,6 +38,7 @@
 <script>
 import store from '../store'
 import Preview from '../components/Preview.vue'
+import { makeRequest } from '../utils/makeRequest.ts'
 export default {
   name: 'AddComment',
   components: {
@@ -74,17 +75,14 @@ export default {
         formData.append('body', this.replyBody)
         formData.append('file', this.selectedFile)
 
-        const response = await fetch('http://localhost:3000/comments/create', {
-          method: 'POST',
-          headers: {
+        await makeRequest(
+          'http://localhost:3000/comments/create',
+          'POST',
+          {
             'Authorization': 'Bearer ' + store.getters.getToken
           },
-          body: formData
-        })
-
-        if (response.status === 400) {
-          throw new Error((await response.json()).message[0])
-        }
+          formData
+        )
 
         this.replyBody = ''
         this.$emit('newComment')

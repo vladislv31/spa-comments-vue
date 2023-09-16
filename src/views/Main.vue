@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <router-link v-if="!isLoggedIn()" to="/login"><button>Login</button></router-link>
+    <b-button variant="outline-primary" class="mb-5" @click="logout">Logout</b-button>
     <h2>Add comment</h2>
     <AddComment @newComment="fetchComments" class="mb-5"/>
     <h3>Comments</h3>
@@ -37,6 +37,7 @@ import Comment from '../components/Comment.vue'
 import AddComment from '../components/AddComment.vue'
 import store from '../store'
 import loaderGif from '@/assets/loader.gif'
+import { makeRequest } from '../utils/makeRequest.ts'
 export default {
   components: {
     Comment,
@@ -48,7 +49,7 @@ export default {
       comments: [],
       isLoading: false,
       page: 1,
-      perPage: 2,
+      perPage: 5,
       sortBy: undefined,
       sortOrder: 'desc',
       loaderGif
@@ -74,18 +75,19 @@ export default {
       this.isLoading = true
 
       try {
-        const response = await fetch('http://localhost:3000/comments/getAll?' + new URLSearchParams({
-          page: this.page,
-          perPage: this.perPage,
-          sortBy: this.sortBy,
-          sortOrder: this.sortOrder
-        }), {
-          method: 'GET',
-          headers: {
+        const response = await makeRequest(
+          'http://localhost:3000/comments/getAll?' + new URLSearchParams({
+            page: this.page,
+            perPage: this.perPage,
+            sortBy: this.sortBy || 'createdAt',
+            sortOrder: this.sortOrder
+          }),
+          'GET',
+          {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + store.getters.getToken
           }
-        })
+        )
         const json = await response.json()
         this.comments = json.data
         this.pagesCount = Math.round(json.count / this.perPage)
@@ -108,6 +110,11 @@ export default {
         this.comments = []
         this.fetchComments()
       }
+    },
+    logout () {
+      store.commit('setUser', '')
+      store.commit('setToken', '')
+      this.$router.push('/login')
     }
   }
 }
