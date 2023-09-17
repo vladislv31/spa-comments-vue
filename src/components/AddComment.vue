@@ -17,7 +17,7 @@
       <p>{{ error }}</p>
     </div>
     <input type="file" @change="handleFileUpload"/>
-    <div id="recaptcha" class="g-recaptcha mt-3 mb-3" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+    <div :id="elementId" class="mt-3 mb-3"></div>
     <b-button size="sm" @click="replyToComment" variant="outline-success">Send</b-button>
     <div class="mt-3 d-flex">
       <label style="margin-right: 8px;">Show preview</label>
@@ -40,17 +40,40 @@
 import store from '../store'
 import Preview from '../components/Preview.vue'
 import { makeRequest } from '../utils/makeRequest.ts'
+
+function makeId (length) {
+  let result = ''
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  const charactersLength = characters.length
+  let counter = 0
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+    counter += 1
+  }
+  return result
+}
+
 export default {
   name: 'AddComment',
   components: {
     Preview
   },
   mounted () {
+    window.grecaptchaLoaded = () => {
+      window.dispatchEvent(new Event('grecaptchaLoaded'))
+    }
+
     const script = document.createElement('script')
-    script.src = 'https://www.google.com/recaptcha/api.js'
+    script.src = 'https://www.google.com/recaptcha/api.js?onload=grecaptchaLoaded&render=explicit'
     script.async = true
     script.defer = true
     document.head.appendChild(script)
+
+    if (window.grecaptcha && window.grecaptcha.render) {
+      this.initializeRecaptcha()
+    } else {
+      window.addEventListener('grecaptchaLoaded', this.initializeRecaptcha)
+    }
   },
   props: {
     parentId: {
@@ -63,10 +86,16 @@ export default {
       selectedFile: null,
       replyBody: '',
       error: null,
-      showPreview: false
+      showPreview: false,
+      elementId: makeId(10),
+      widgetId: null
     }
   },
   methods: {
+    initializeRecaptcha () {
+      // eslint-disable-next-line no-undef
+      this.widgetId = grecaptcha.render(this.elementId, { 'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' })
+    },
     handleFileUpload (event) {
       console.log(event.target.files[0])
       this.selectedFile = event.target.files[0]
@@ -80,7 +109,7 @@ export default {
       try {
         const formData = new FormData()
         // eslint-disable-next-line no-undef
-        const recaptchaToken = grecaptcha.getResponse()
+        const recaptchaToken = grecaptcha.getResponse(this.widgetId)
 
         if (!recaptchaToken) {
           alert('Please complete the captcha')
