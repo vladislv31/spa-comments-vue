@@ -1,7 +1,7 @@
 import router from '../router'
 
 export const makeRequest = async (uri, method, headers, body) => {
-  const response = await fetch(`http://localhost:5000${uri}`, {
+  const response = await fetch(`http://localhost:5000${uri}`, { // TODO: add to env
     method,
     headers,
     body

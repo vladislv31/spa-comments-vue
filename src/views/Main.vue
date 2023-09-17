@@ -128,7 +128,7 @@ export default {
     }
   },
   mounted () {
-    this.socket = io('http://localhost:5000', {
+    this.socket = io('http://localhost:5000', { // TODO: add to env
       query: {
         username: store.getters.getUser
       }

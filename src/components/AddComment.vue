@@ -94,7 +94,7 @@ export default {
   methods: {
     initializeRecaptcha () {
       // eslint-disable-next-line no-undef
-      this.widgetId = grecaptcha.render(this.elementId, { 'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' })
+      this.widgetId = grecaptcha.render(this.elementId, { 'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' }) // TODO: add to env
     },
     handleFileUpload (event) {
       console.log(event.target.files[0])
