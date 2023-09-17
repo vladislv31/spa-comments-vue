@@ -16,6 +16,8 @@ export const makeRequest = async (uri, method, headers, body) => {
       } else {
         throw new Error((await response.json()).message)
       }
+    } else if (response.status === 403) {
+      throw new Error((await response.json()).message)
     } else if (response.status === 409) {
       throw new Error((await response.json()).message)
     }

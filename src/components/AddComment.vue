@@ -17,6 +17,7 @@
       <p>{{ error }}</p>
     </div>
     <input type="file" @change="handleFileUpload"/>
+    <div id="recaptcha" class="g-recaptcha mt-3 mb-3" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
     <b-button size="sm" @click="replyToComment" variant="outline-success">Send</b-button>
     <div class="mt-3 d-flex">
       <label style="margin-right: 8px;">Show preview</label>
@@ -43,6 +44,13 @@ export default {
   name: 'AddComment',
   components: {
     Preview
+  },
+  mounted () {
+    const script = document.createElement('script')
+    script.src = 'https://www.google.com/recaptcha/api.js'
+    script.async = true
+    script.defer = true
+    document.head.appendChild(script)
   },
   props: {
     parentId: {
@@ -71,9 +79,18 @@ export default {
 
       try {
         const formData = new FormData()
+        // eslint-disable-next-line no-undef
+        const recaptchaToken = grecaptcha.getResponse()
+
+        if (!recaptchaToken) {
+          alert('Please complete the captcha')
+          return
+        }
+
         if (this.parentId) { formData.append('parentId', this.parentId) }
         formData.append('body', this.replyBody)
         formData.append('file', this.selectedFile)
+        formData.append('recaptchaToken', recaptchaToken)
 
         await makeRequest(
           '/comments/create',
@@ -85,6 +102,8 @@ export default {
         )
 
         this.replyBody = ''
+        // eslint-disable-next-line no-undef
+        grecaptcha.reset()
         this.$emit('newComment')
       } catch (e) {
         this.error = e.message
