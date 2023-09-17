@@ -128,7 +128,7 @@ export default {
     }
   },
   mounted () {
-    this.socket = io('http://localhost:80', {
+    this.socket = io('http://localhost:5000', {
       query: {
         username: store.getters.getUser
       }
