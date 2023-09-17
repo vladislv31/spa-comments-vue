@@ -10,6 +10,7 @@ This is a Vue.js application designed to interact with the [NestJS Comments API]
 - Post, view, and reply to comments
 - Attach text files and images to comments
 - Mobile-responsive design
+- When another user replies on your comment, you will receive alert by websockets
 
 ## Prerequisites
 
